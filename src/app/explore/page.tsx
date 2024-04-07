@@ -88,7 +88,7 @@ const Page = () => {
     };
 
     fetchAllItems();
-  }, [itemFoundOrLost]);
+  }, [itemFoundOrLost, allItems]);
 
   return (
     <main className="min-h-screen">
@@ -162,6 +162,7 @@ const Page = () => {
         {allItems &&
           allItems.map((item: any) => (
             <Link
+              key={item.id}
               href={`/${item.lostOrFound}/${item.id}`}
               className="w-full cursor-pointer border border-gray-600 rounded-3xl flex flex-row items-center"
             >

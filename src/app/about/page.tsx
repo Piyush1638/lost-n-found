@@ -3,11 +3,11 @@ import React from 'react'
 import { useUser } from "@clerk/nextjs";
 
 const page = () => {
-  const { isLoaded, isSignedIn, user } = useUser();
+  /*const { isLoaded, isSignedIn, user } = useUser();
   if (!isLoaded || !isSignedIn) {
     return null;
   }
-  console.log(user);
+  console.log(user);*/
   return (
     <div>page</div>
   )

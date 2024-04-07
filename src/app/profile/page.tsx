@@ -4,7 +4,7 @@ import React from "react";
 import { useUser } from "@clerk/nextjs";
 import { Label } from "@/components/ui/label";
 
-const page = () => {
+const Profile = () => {
   const { isLoaded, isSignedIn, user } = useUser();
   if (!isLoaded || !isSignedIn) {
     return null;
@@ -58,4 +58,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Profile;
