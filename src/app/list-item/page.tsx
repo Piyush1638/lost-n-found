@@ -24,6 +24,8 @@ interface FormData {
   city: string;
   state: string;
   lostOrFound: string;
+  phoneNumber: string;
+  email: string;
   image: FileList | null; // Assuming image will be a FileList or null
 }
 
@@ -43,6 +45,8 @@ const Page = () => {
     city: "",
     state: "",
     lostOrFound: "",
+    phoneNumber: "",
+    email: "",
     image: null,
   });
 
@@ -50,7 +54,7 @@ const Page = () => {
     return null;
   }
 
-  const { username, id } = user;
+  const { username, id, imageUrl } = user;
   const {
     itemName,
     description,
@@ -60,21 +64,26 @@ const Page = () => {
     city,
     state,
     lostOrFound,
+    phoneNumber,
+    email,
     image,
   } = formData;
 
   const isFormValid = () => {
     return (
-      itemName !== "" &&
-      description !== "" &&
-      category !== "" &&
-      date !== "" &&
-      place !== "" &&
-      city !== "" &&
-      state !== "" &&
-      lostOrFound !== ""
+      itemName.trim() !== "" &&
+      description.trim() !== "" &&
+      category.trim() !== "" &&
+      date.trim() !== "" &&
+      place.trim() !== "" &&
+      city.trim() !== "" &&
+      state.trim() !== "" &&
+      lostOrFound.trim() !== "" &&
+      phoneNumber.trim() !== "" &&
+      email.trim() !== ""
     );
   };
+  
 
   const onChangeHandler = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -96,7 +105,7 @@ const Page = () => {
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData);
+    // console.log(formData);
 
     try {
       setPopUp("flex");
@@ -116,7 +125,7 @@ const Page = () => {
       await uploadTask;
 
       // Get download URL of the uploaded image
-      const imageUrl = await getDownloadURL(uploadTask.snapshot.ref);
+      const ImageUrl = await getDownloadURL(uploadTask.snapshot.ref);
 
       // Add imageUrl to form data
       const formDataWithImage = {
@@ -127,8 +136,10 @@ const Page = () => {
         place: formData.place,
         city: formData.city,
         state: formData.state,
+        phoneNumber: formData.phoneNumber,
+        email: formData.email,
         lostOrFound: formData.lostOrFound,
-        imageUrl: imageUrl,
+        imageUrl: ImageUrl,
         userId: id,
         userName: username,
         userImg: imageUrl,
@@ -141,7 +152,7 @@ const Page = () => {
         formDataWithImage
       );
 
-      console.log("Form data saved successfully:", formDataWithImage);
+      // console.log("Form data saved successfully:", formDataWithImage);
       setUploadingStatus("Uploaded successfully");
       setUploadingStatus("Uploaded Successfully");
       setPopUp("hidden");
@@ -197,17 +208,17 @@ const Page = () => {
                   required
                   className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  <option disabled selected hidden>
+                  <option selected >
                     Select Category
                   </option>
-                  <option value="electronic">Electronics</option>
-                  <option value="clothing">Clothing</option>
-                  <option value="jewelry">Jewellry</option>
-                  <option value="keys">Keys</option>
-                  <option value="id-cards">Id-Card</option>
-                  <option value="documents">Documents</option>
-                  <option value="wallets">Wallets</option>
-                  <option value="others">Others</option>
+                  <option value="Electronics">Electronics</option>
+                  <option value="Clothing">Clothing</option>
+                  <option value="Jewellery">Jewellery</option>
+                  <option value="Keys">Keys</option>
+                  <option value="Id-Card">Id-Card</option>
+                  <option value="Documents">Documents</option>
+                  <option value="Wallets">Wallets</option>
+                  <option value="Others">Others</option>
                 </select>
               </div>
 
@@ -262,7 +273,7 @@ const Page = () => {
                   required
                   className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  <option disabled selected hidden>
+                  <option selected>
                     Select Category
                   </option>
                   <option value="lost">Lost</option>
@@ -334,6 +345,35 @@ const Page = () => {
                 />
               </label>
             </div>
+
+            {/* Contact Details */}
+            <div className="flex flex-col">
+                <label>Your Contact</label>
+                <input
+                  type="text"
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  placeholder="Phone Number"
+                  value={phoneNumber}
+                  onChange={onChangeHandler}
+                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                />
+                <p className="text-xs">Don't worry we will not show your contact information until you approve it.</p>
+              </div>
+
+              <div className="flex flex-col">
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={email}
+                  placeholder="Your Email"
+                  onChange={onChangeHandler}
+                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                />
+                <p className="text-xs">Don't worry we will not show your contact information until you approve it.</p>
+              </div>
+
             <button
               type="submit"
               disabled={!isFormValid()}

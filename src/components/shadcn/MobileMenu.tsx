@@ -40,9 +40,6 @@ const MobileMenu = () => {
             >
               List-Item
             </Link>
-            <Link href="/about" className="font-poppins font-medium text-base">
-              About
-            </Link>
             <Link
               href="/profile"
               className="font-poppins font-medium text-base"

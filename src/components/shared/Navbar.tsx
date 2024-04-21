@@ -22,22 +22,19 @@ const Navbar = () => {
           <>
             <div className="flex items-center justify-center gap-3">
               <div className="tablet:flex hidden items-center justify-center gap-6">
-                <Link href="/" className="font-poppins font-medium">
+                <Link href="/" className="font-poppins font-medium hover:scale-[1.05]">
                   Home
                 </Link>
-                <Link href="/explore" className="font-poppins font-medium">
+                <Link href="/explore" className="font-poppins font-medium hover:scale-[1.05]">
                   Explore
                 </Link>
-                <Link href="/list-item" className="font-poppins font-medium">
+                <Link href="/list-item" className="font-poppins font-medium hover:scale-[1.05]">
                   List-Item
                 </Link>
-                <Link href="/about" className="font-poppins font-medium">
-                  About
-                </Link>
-                <Link href="/profile" className="font-poppins font-medium">
+                <Link href={`/profile/${userId}`} className="font-poppins font-medium hover:scale-[1.05]">
                   Profile
                 </Link>
-                <ModeToggle/>
+                {/* <ModeToggle/> */}
               </div>
               <div className="p-1 bg-purple-600 rounded-full">
                 <UserButton afterSignOutUrl="/" />
