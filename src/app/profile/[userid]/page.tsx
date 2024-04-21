@@ -140,7 +140,7 @@ const Profile: React.FC<{ params: Params }> = ({ params }) => {
                   {(lostOrFound === "lost" ? lostListings : foundListings).map((listing) => (
                     <div
                       key={listing.id}
-                      className="w-full cursor-pointer border border-gray-600 rounded-3xl flex flex-row items-center justify-between"
+                      className="w-full cursor-pointer shadow-md p-3 rounded-3xl flex flex-row items-center justify-between"
                     >
                       <Link
                         href={`/${listing.lostOrFound}/${listing.id}`}

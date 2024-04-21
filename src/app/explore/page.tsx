@@ -23,10 +23,15 @@ const Page = () => {
   const [activeButton, setActiveButton] = useState("All");
   const [allItems, setAllItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleClick = (buttonName: string) => {
     setActiveButton(buttonName);
     setCategory(buttonName);
+  };
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
   };
 
   useEffect(() => {
@@ -80,6 +85,7 @@ const Page = () => {
               type="text"
               placeholder="Search Item"
               className="w-full rounded-tr-3xl bg-transparent rounded-br-3xl h-full py-3 outline-none"
+              onChange={handleSearch}
             />
             <IoSearchOutline className="text-3xl mx-3 cursor-pointer" />
           </div>
@@ -139,12 +145,19 @@ const Page = () => {
       ) : (
         <div className="grid tablet:grid-cols-4 grid-cols-1 gap-4 px-6">
           {allItems
-            .filter((item) => category === "All" || item.category === category)
+            .filter(
+              (item) =>
+                (category === "All" || item.category === category) &&
+                (searchQuery === "" ||
+                  item.itemName
+                    .toLowerCase()
+                    .includes(searchQuery.toLowerCase()))
+            )
             .map((item: Item) => (
               <Link
                 key={item.id}
                 href={`/${item.lostOrFound}/${item.id}`}
-                className="w-full cursor-pointer border border-gray-600 rounded-3xl flex flex-row items-center"
+                className="w-full cursor-pointer shadow-xl rounded-3xl flex flex-row items-center"
               >
                 <Image
                   src={item.imageUrl}
