@@ -16,22 +16,29 @@ import React, { useEffect, useState } from "react";
 
 const ItemPage = ({ params }: any) => {
   const { isLoaded, isSignedIn, user } = useUser();
-  if (!isLoaded || !isSignedIn) {
-    return null;
-  }
-  const { id } = user;
 
-  const itemId = params.id;
-  const category = params.category;
+  // Move the hooks above the conditional return
   const [item, setItem] = useState<any>({});
   const [messages, setMessages] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [Id, setId] = useState<string>("");
+ 
+  const itemId = params.id;
+  const category = params.category;
+
 
   useEffect(() => {
+    if (!isLoaded || !isSignedIn) {
+      return;
+    }
+
+    setId(user.id);
+
     const fetchItemAndMessages = async () => {
       try {
-        // Fetch item details
         setLoading(true);
+
+        // Fetch item details
         const itemRef = doc(db, category, itemId);
         const itemSnapshot = await getDoc(itemRef);
         if (itemSnapshot.exists()) {
@@ -57,17 +64,20 @@ const ItemPage = ({ params }: any) => {
     };
 
     fetchItemAndMessages();
-  }, [itemId, category]);
+  }, [itemId, category, isLoaded, isSignedIn, user]);
+
+  if (!isLoaded || !isSignedIn) {
+    return null;
+  }
+
+
 
   const allowPermission = async ({ messageId }: { messageId: string }) => {
     try {
-      // Construct the path to the message document
       const messageRef = doc(db, category, itemId, "permissions", messageId);
 
-      // Update the message document to set permissionAllowed: true
       await updateDoc(messageRef, { permissionAllowed: true });
 
-      // Optionally, you can also update the state to reflect the change
       setMessages((prevMessages) =>
         prevMessages.map((message) =>
           message.id === messageId
@@ -79,7 +89,6 @@ const ItemPage = ({ params }: any) => {
       console.log("Permission allowed successfully!");
     } catch (error) {
       console.error("Error allowing permission:", error);
-      // Optionally, handle error scenarios such as displaying an error message to the user
     }
   };
 
@@ -90,7 +99,6 @@ const ItemPage = ({ params }: any) => {
       ) : (
         <div className="w-full laptop:px-10 laptop:py-19 tablet:p-12 p-4 py-5">
           <div className="flex laptop:flex-row flex-col gap-3">
-            {/* <div className="laptop:w-3/5 w-full flex flex-row gap-2"> */}
             <div className="laptop:w-1/2 w-full px-3 py-4 bg-white shadow-lg shadow-gray-300 border border-gray-600 rounded-xl flex flex-col items-center justify-center gap-3">
               <Image
                 src={item.imageUrl}
@@ -104,7 +112,7 @@ const ItemPage = ({ params }: any) => {
               </h3>
               <p>{item.description}</p>
             </div>
-            <div className="laptop:w-1/2 w-full px-3 py-4 bg-white shadow-lg shadow-gray-300 border border-gray-600 rounded-xl flex flex-col items-start  gap-3">
+            <div className="laptop:w-1/2 w-full px-3 py-4 bg-white shadow-lg shadow-gray-300 border border-gray-600 rounded-xl flex flex-col items-start gap-3">
               <h3 className="font-poppins text-xl font-medium my-6">
                 Item Details
               </h3>
@@ -121,10 +129,9 @@ const ItemPage = ({ params }: any) => {
                 label="City & State"
                 value={`${item.city}, ${item.state}`}
               />
-              {/* Show the contact details here */}
               {messages.map(
                 (message, index) =>
-                  message.userId === id &&
+                  message.userId === Id &&
                   message.permissionAllowed && (
                     <div key={index}>
                       <h3 className="font-poppins text-xl font-medium my-6">
@@ -135,13 +142,11 @@ const ItemPage = ({ params }: any) => {
                     </div>
                   )
               )}
-
-              <Message2 itemId={itemId} category={category} userId={id} />
+              <Message2 itemId={itemId} category={category} userId={Id} />
             </div>
-            {/* </div> */}
           </div>
 
-          {item.userId === id && (
+          {item.userId === Id && (
             <div className="my-6 ">
               <h3 className="my-4 font-poppins text-xl font-medium">
                 Permissions Requests
@@ -184,7 +189,6 @@ const ItemPage = ({ params }: any) => {
   );
 };
 
-// Component to render each detail row
 const DetailRow = ({
   label,
   value,
@@ -224,11 +228,5 @@ const DetailRow = ({
     )}
   </div>
 );
-
-// const IsItYours = () => (
-//   <div className="flex items-center justify-center p-3 bg-purple-500 text-white rounded-lg my-4 cursor-pointer">
-//     <p>Is it yours? Talk to lister</p>
-//   </div>
-// );
 
 export default ItemPage;

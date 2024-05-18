@@ -76,7 +76,7 @@ const Message2 = ({
             placeholder="Send a message to the lister"
           />
           <p className="text-xs">This message will send to the lister.</p>
-          <p className="text-xs font-semibold">Only the lister's permission will get you the contacts.</p>
+          <p className="text-xs font-semibold">Only the lister&apos;s permission will get you the contacts.</p>
 
           <div className="flex items-center gap-4">
             <button
